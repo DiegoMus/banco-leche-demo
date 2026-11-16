@@ -1,0 +1,11 @@
+rules_version = '2';
+
+// REGLAS SOLO PARA DEMO: lectura y escritura abiertas hasta la fecha indicada.
+// No usar con datos reales de pacientes. Para producción: Firebase Auth + reglas por rol.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+    }
+  }
+}
