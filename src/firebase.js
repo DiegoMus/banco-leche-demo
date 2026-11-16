@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const config = {
@@ -12,4 +13,6 @@ const config = {
 
 // Si no hay configuración, la app cae a "modo local" (ver src/data/store.js).
 export const firebaseActivo = Boolean(config.apiKey && config.projectId);
-export const db = firebaseActivo ? getFirestore(initializeApp(config)) : null;
+const app = firebaseActivo ? initializeApp(config) : null;
+export const db = app ? getFirestore(app) : null;
+export const auth = app ? getAuth(app) : null;
