@@ -21,6 +21,28 @@ function useColeccion(nombre, onError) {
   return datos;
 }
 
+// En móvil las tablas se muestran como tarjetas (ver styles.css): cada celda
+// toma su etiqueta del encabezado de su columna.
+function useEtiquetasDeTabla() {
+  useEffect(() => {
+    const etiquetar = () => {
+      document.querySelectorAll('table').forEach((tabla) => {
+        const titulos = [...tabla.querySelectorAll('thead th')].map((th) => th.textContent);
+        tabla.querySelectorAll('tbody tr').forEach((tr) => {
+          [...tr.children].forEach((td, i) => {
+            const titulo = titulos[i] || '';
+            if (td.dataset.label !== titulo) td.dataset.label = titulo;
+          });
+        });
+      });
+    };
+    etiquetar();
+    const observador = new MutationObserver(etiquetar);
+    observador.observe(document.getElementById('root'), { childList: true, subtree: true });
+    return () => observador.disconnect();
+  }, []);
+}
+
 export default function App() {
   const [pagina, setPagina] = useState('panel');
   const [errorDatos, setErrorDatos] = useState(null);
